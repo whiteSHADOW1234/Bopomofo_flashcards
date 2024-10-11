@@ -111,7 +111,8 @@ export default function Home() {
         音 <span className={styles.straight}>一ㄣ</span>{'\u00A0'}
         符 <span className={styles.straight}>ㄈㄨ</span><span className={styles.punctuation}>ˊ</span> {'\u00A0'}
         號 <span className={styles.straight}>ㄏㄠ</span><span className={styles.punctuation}>ˋ</span> {'\u00A0'}
-        {/* 卡 <span className={styles.straight}>ㄎㄚ</span><span className={styles.punctuation}>ˇ</span> */}
+        卡 <span className={styles.straight}>ㄎㄚ</span><span className={styles.punctuation}>ˇ</span> {'\u00A0'}{'\u00A0'}
+
       </h1>
       <Section 
         title={
