@@ -55,10 +55,8 @@ export default function Home() {
       <div
         className={`${styles.card} ${flipped ? styles.flipped : ""} ${isLastFlipped ? styles.glow : ""}`} // Apply glow class if it's the last flipped card
         onClick={() => {
-          if (!flipped) {
-            setFlipped(true); // Flip only once
-            onFlip(); // Call onFlip to update the last flipped index
-          }
+          setFlipped(!flipped);
+          onFlip(); // Call onFlip function
         }}
       >
         <div className={`${styles.cardFront} ${colorClass}`}>
