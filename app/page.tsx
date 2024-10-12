@@ -60,7 +60,7 @@ export default function Home() {
         }}
       >
         <div className={`${styles.cardFront} ${colorClass}`}>
-          <span className={styles.letter}>?</span>
+          <span className={styles.letter}></span>
         </div>
         <div className={styles.cardBack}>
           <span className={styles.letter}>{letter}</span>
@@ -122,7 +122,7 @@ export default function Home() {
             分 <span className={styles.straight}>ㄈㄣ</span><span className={styles.punctuation}>ˋ</span> {'\u00A0'}
             ({'\u00A0'}
             聲 <span className={styles.straight}>ㄕㄥ</span>{'\u00A0'}
-            母 <span className={styles.straight}>ㄇㄨ</span><span className={styles.punctuation}>ˇ</span>{'\u00A0'})
+            符 <span className={styles.straight}>ㄈㄨ</span><span className={styles.punctuation}>ˊ</span>{'\u00A0'})
           </span>
         } 
         letters={section1} 
@@ -137,7 +137,7 @@ export default function Home() {
             分 <span className={styles.straight}>ㄈㄣ</span><span className={styles.punctuation}>ˋ</span> {'\u00A0'}
             ({'\u00A0'}
             介 <span className={styles.straight}>ㄐ一ㄝ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            母 <span className={styles.straight}>ㄇㄨ</span><span className={styles.punctuation}>ˇ</span>{'\u00A0'})
+            音 <span className={styles.straight}>一ㄣ</span>{'\u00A0'})
           </span>
         } 
         letters={section2} 
@@ -152,7 +152,7 @@ export default function Home() {
             分 <span className={styles.straight}>ㄈㄣ</span><span className={styles.punctuation}>ˋ</span> {'\u00A0'}
             ({'\u00A0'}
             韻 <span className={styles.straight}>ㄩㄣ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            母 <span className={styles.straight}>ㄇㄨ</span><span className={styles.punctuation}>ˇ</span>{'\u00A0'})
+            符 <span className={styles.straight}>ㄈㄨ</span><span className={styles.punctuation}>ˊ</span>{'\u00A0'})
           </span>
         } 
         letters={section3} 

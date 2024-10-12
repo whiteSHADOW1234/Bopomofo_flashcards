@@ -126,8 +126,8 @@
   }
 
   .glow {
-    background-color: rgba(255, 255, 0, 0.304);
-    box-shadow: 0 0 50px rgba(255, 255, 0, 1); /* Change color as needed */
+    background-color: rgba(255, 0, 0, 0.304);
+    box-shadow: 0 0 50px rgb(255, 0, 0); /* Change color as needed */
     
   }
   
