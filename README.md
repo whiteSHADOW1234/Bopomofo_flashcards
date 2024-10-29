@@ -1,7 +1,19 @@
 ![Bopomofo_flashcards](https://github.com/user-attachments/assets/cd68e2e8-9ba4-470f-b1fd-2e9b6fde82f7)
 A simple, responsive web application built with Next.js and React that presents Bopomofo symbols as interactive flashcards. This project serves as a valuable learning tool for both students learning Zhuyin (also known as Bopomofo) and teachers instructing it. It provides a visually engaging and user-friendly way to practice and reinforce recognition of these essential Mandarin phonetic symbols.
 
-[Live Demo](https://bopomofo-flashcards.vercel.app/)
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript Badge" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS Badge" />
+  <img src="https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js Badge" />
+  <img src="https://img.shields.io/github/license/whiteSHADOW1234/Bopomofo_flashcards?label=license&style=for-the-badge" alt="License Badge" />
+  <img src="https://img.shields.io/badge/node.js-20.18.0-blue?style=for-the-badge" alt="Node.js Badge" />
+  <img src="https://img.shields.io/badge/npm-10.9.0-orange?style=for-the-badge" alt="NPM Badge" />
+  <img src="https://img.shields.io/badge/PRs-welcome-black?style=for-the-badge" alt="PRs Welcome Badge" />
+</p>
+<p align="center">
+  <a href="https://bopomofo-flashcards.vercel.app/" target="_blank"> Visit This Site </a>
+</p>
+
 
 
 ## Features
