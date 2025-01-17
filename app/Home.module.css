@@ -34,6 +34,8 @@
   .section {
     width: 100%;
     max-width: 1200px;
+    /* add some blank at the bottom */
+    margin-bottom: 20px;
   }
   
   .cardGrid {
