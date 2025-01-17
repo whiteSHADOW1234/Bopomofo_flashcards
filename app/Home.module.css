@@ -23,16 +23,16 @@
   .cardGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 10px;
+    gap: 4px;
     width: 100%;
     max-width: 1200px;
   }
   
   .card {
     perspective: 1000px;
-    width: 100%;
+    width: 80%;
     height: 0;
-    padding-bottom: 150%;
+    padding-bottom: 80%;
     position: relative;
     cursor: pointer;
   }
