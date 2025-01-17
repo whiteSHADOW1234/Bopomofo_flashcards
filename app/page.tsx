@@ -71,20 +71,16 @@ export default function Home() {
   
 
   type SectionProps = {
-    title: React.ReactNode; // Change from 'string' to 'React.ReactNode'
     letters: string[];
     colorClass: string;
   };
 
   // Section of cards
-  const Section: React.FC<SectionProps> = ({ title, letters, colorClass }) => {
+  const Section: React.FC<SectionProps> = ({ letters, colorClass }) => {
     const [lastFlippedIndex, setLastFlippedIndex] = useState<number | null>(null);
   
     return (
       <div className={styles.section}>
-        <div className={styles.divider}>
-          <h2>{title}</h2>
-        </div>
         <main className={styles.cardGrid}>
           {letters.map((letter, index) => (
             <Flashcard
@@ -111,50 +107,31 @@ export default function Home() {
         號<span className={styles.straight}>ㄏㄠ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
         字<span className={styles.straight}>ㄗ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
         卡<span className={styles.straight}>ㄎㄚ</span><span className={styles.punctuation}>ˇ</span> {'\u00A0'}{'\u00A0'}
-
+        
       </h1>
+      <div className={styles.colorTags}>
+        <span className={`${styles.colorTag} ${styles.redBackground}`}> 
+          聲<span className={styles.straight}>ㄕㄥ</span>{'\u00A0'}  
+          符<span className={styles.straight}>ㄈㄨ</span><span className={styles.punctuation}>ˊ</span>{'\u00A0'}
+        </span>
+        <span className={`${styles.colorTag} ${styles.greenBackground}`}> 
+          介<span className={styles.straight}>ㄐ一ㄝ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
+          音<span className={styles.straight}>一ㄣ</span>{'\u00A0'}  
+        </span>
+        <span className={`${styles.colorTag} ${styles.blueBackground}`}> 
+          韻<span className={styles.straight}>ㄩㄣ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'} 
+          符<span className={styles.straight}>ㄈㄨ</span><span className={styles.punctuation}>ˊ</span>{'\u00A0'} 
+        </span>
+      </div>
       <Section 
-        title={
-          <span>
-            第 <span className={styles.straight}>ㄉ一</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            一 <span className={styles.straight}>一</span>{'\u00A0'}
-            部 <span className={styles.straight}>ㄅㄨ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            分 <span className={styles.straight}>ㄈㄣ</span><span className={styles.punctuation}>ˋ</span> {'\u00A0'}
-            ({'\u00A0'}
-            聲 <span className={styles.straight}>ㄕㄥ</span>{'\u00A0'}
-            符 <span className={styles.straight}>ㄈㄨ</span><span className={styles.punctuation}>ˊ</span>{'\u00A0'})
-          </span>
-        } 
         letters={section1} 
         colorClass={styles.redBackground}
       />
       <Section 
-        title={
-          <span>
-            第 <span className={styles.straight}>ㄉ一</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            二 <span className={styles.straight}>ㄦ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            部 <span className={styles.straight}>ㄅㄨ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            分 <span className={styles.straight}>ㄈㄣ</span><span className={styles.punctuation}>ˋ</span> {'\u00A0'}
-            ({'\u00A0'}
-            介 <span className={styles.straight}>ㄐ一ㄝ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            音 <span className={styles.straight}>一ㄣ</span>{'\u00A0'})
-          </span>
-        } 
         letters={section2} 
         colorClass={styles.greenBackground}
       />
       <Section 
-        title={
-          <span>
-            第 <span className={styles.straight}>ㄉ一</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            三 <span className={styles.straight}>ㄙㄢ</span>{'\u00A0'}
-            部 <span className={styles.straight}>ㄅㄨ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            分 <span className={styles.straight}>ㄈㄣ</span><span className={styles.punctuation}>ˋ</span> {'\u00A0'}
-            ({'\u00A0'}
-            韻 <span className={styles.straight}>ㄩㄣ</span><span className={styles.punctuation}>ˋ</span>{'\u00A0'}
-            符 <span className={styles.straight}>ㄈㄨ</span><span className={styles.punctuation}>ˊ</span>{'\u00A0'})
-          </span>
-        } 
         letters={section3} 
         colorClass={styles.blueBackground}
       />
