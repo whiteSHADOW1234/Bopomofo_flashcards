@@ -250,7 +250,6 @@ export default function Home() {
     );
   };
 
-  const [totalCards, setTotalCards] = useState(0);
   return (
     <div className={styles.mainContainer}>
       <h1 className={styles.pageTitle}>
