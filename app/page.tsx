@@ -17,35 +17,27 @@ type SectionData = {
 
 export default function Home() {
   const [phonetics, setPhonetics] = useState<PhoneticData[]>([]);
-  const [currentSectionData, setCurrentSectionData] =
-    useState<SectionData | null>(null);
+  const [currentSectionData, setCurrentSectionData] = useState<SectionData | null>(null);
   const [cardsPerRow, setCardsPerRow] = useState(0);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [selectedSection, setSelectedSection] = useState<number | null>(0);
   const [glowSection, setGlowSection] = useState<number | null>(0);
-  const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [allWords, setAllWords] = useState<string[]>([]);
-  const [revealedCards, setRevealedCards] = useState<Map<number, string>>(
-    new Map()
-  );
-  const [lastFlippedIndices, setLastFlippedIndices] = useState<number[]>([
-    -1, -1, -1,
-  ]);
+  const [revealedCards, setRevealedCards] = useState<Map<number, string>>(new Map());
+  const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
+  const [activeCard, setActiveCard] = useState<number | null>(null);
 
   useEffect(() => {
     const calculateCardsPerRow = () => {
       if (typeof window !== "undefined") {
         const screenWidth = window.innerWidth;
         setIsLargeScreen(screenWidth > 1300);
-        // Get the container's horizontal padding and margins
         const container = document.querySelector(`.${styles.mainContainer}`);
         if (container) {
           const containerStyles = window.getComputedStyle(container);
           const containerPaddingLeft = parseFloat(containerStyles.paddingLeft);
-          const containerPaddingRight = parseFloat(
-            containerStyles.paddingRight
-          );
+          const containerPaddingRight = parseFloat(containerStyles.paddingRight);
           const containerMarginLeft = parseFloat(containerStyles.marginLeft);
           const containerMarginRight = parseFloat(containerStyles.marginRight);
 
@@ -55,16 +47,13 @@ export default function Home() {
             containerMarginLeft +
             containerMarginRight;
           const availableWidth = screenWidth - totalHorizontalSpacing;
-          setCardsPerRow(
-            Math.floor(availableWidth / (isLargeScreen ? 83 : 63))
-          );
+          setCardsPerRow(Math.floor(availableWidth / (isLargeScreen ? 83 : 63)));
         }
       }
     };
 
     calculateCardsPerRow();
     window.addEventListener("resize", calculateCardsPerRow);
-
     return () => window.removeEventListener("resize", calculateCardsPerRow);
   }, [isLargeScreen]);
 
@@ -96,18 +85,18 @@ export default function Home() {
         .slice(0, numberOfWordsToSelect)
         .map((item) => item.text);
       setAllWords(selectedWords);
-      setFlippedCards(new Set());
       setRevealedCards(new Map());
+      setFlippedCards(new Set());
       setSelectedSection(0);
       setGlowSection(0);
+      setActiveCard(null);
     }
   }, [phonetics]);
 
   useEffect(() => {
     if (allWords.length > 0 && cardsPerRow > 0) {
       const selectedWord = allWords[currentWordIndex % allWords.length];
-      const regex =
-        /([ㄭ|ㄅ|ㄆ|ㄇ|ㄈ|ㄉ|ㄊ|ㄋ|ㄌ|ㄍ|ㄎ|ㄏ|ㄐ|ㄑ|ㄒ|ㄓ|ㄔ|ㄕ|ㄖ|ㄗ|ㄘ|ㄙ|ㄧ|ㄨ|ㄩ|ㄚ|ㄛ|ㄜ|ㄝ|ㄞ|ㄟ|ㄠ|ㄡ|ㄢ|ㄣ|ㄤ|ㄥ|ㄦ])([ˇˋˊ˙]?)/g;
+      const regex = /([ㄭ|ㄅ|ㄆ|ㄇ|ㄈ|ㄉ|ㄊ|ㄋ|ㄌ|ㄍ|ㄎ|ㄏ|ㄐ|ㄑ|ㄒ|ㄓ|ㄔ|ㄕ|ㄖ|ㄗ|ㄘ|ㄙ|ㄧ|ㄨ|ㄩ|ㄚ|ㄛ|ㄜ|ㄝ|ㄞ|ㄟ|ㄠ|ㄡ|ㄢ|ㄣ|ㄤ|ㄥ|ㄦ])([ˇˋˊ˙]?)/g;
       const parts = [];
       let match;
 
@@ -127,49 +116,43 @@ export default function Home() {
     }
   }, [allWords, cardsPerRow, currentWordIndex]);
 
-  // Flashcard component
   const Flashcard = ({
     letter,
     colorClass,
     sectionIndex,
     index,
     onFlip,
-    isFlipped,
   }: {
     letter: string;
     colorClass: string;
     sectionIndex: number;
     index: number;
     onFlip: (sectionIndex: number, cardIndex: number) => void;
-    isFlipped: boolean;
   }) => {
     const cardIndex = index + sectionIndex * cardsPerRow * 2;
+    const isFlipped = flippedCards.has(cardIndex);
+    const isActive = activeCard === cardIndex;
 
     const handleFlip = () => {
-      if (selectedSection === sectionIndex) {
+      if (selectedSection === sectionIndex && !isFlipped) {
         onFlip(sectionIndex, index);
-      } else {
+      } else if (selectedSection !== sectionIndex) {
         alert("Please select a card from the correct section.");
       }
     };
+
     return (
       <div
         className={`${styles.card} ${isFlipped ? styles.flipped : ""} ${
-          lastFlippedIndices[sectionIndex] === index ? styles.glow : ""
+          isActive ? styles.glow : ""
         }`}
         onClick={handleFlip}
       >
         <div className={`${styles.cardFront} ${colorClass}`}>
           <span className={styles.letter}></span>
         </div>
-        <div
-          className={`${styles.cardBack} ${
-            isFlipped ? styles.cardBackFlipped : ""
-          }`}
-        >
-          <span className={styles.letter}>
-            {revealedCards.get(cardIndex) || letter}
-          </span>
+        <div className={`${styles.cardBack}`}>
+          <span className={styles.letter}>{revealedCards.get(cardIndex) || letter}</span>
         </div>
       </div>
     );
@@ -181,46 +164,46 @@ export default function Home() {
     sectionIndex: number;
   };
 
-  const Section: React.FC<SectionProps> = ({
-    letters,
-    colorClass,
-    sectionIndex,
-  }) => {
+  const Section: React.FC<SectionProps> = ({ letters, colorClass, sectionIndex }) => {
     const handleCardFlip = (sectionIndex: number, cardIndex: number) => {
       const globalIndex = cardIndex + sectionIndex * cardsPerRow * 2;
-      setFlippedCards((prev) => {
-        const newFlippedCards = new Set(prev);
-        if (!newFlippedCards.has(globalIndex)) {
-          newFlippedCards.add(globalIndex);
-        }
-        return newFlippedCards;
+
+      // Add to flipped cards set
+      setFlippedCards(prev => {
+        const newFlipped = new Set(prev);
+        newFlipped.add(globalIndex);
+        return newFlipped;
       });
+
       setRevealedCards((prev) => {
         const newRevealedCards = new Map(prev);
-        if (!newRevealedCards.has(globalIndex)) {
-          newRevealedCards.set(globalIndex, letters ? letters[cardIndex] : "");
-        }
+        newRevealedCards.set(globalIndex, letters ? letters[cardIndex] : "");
         return newRevealedCards;
       });
-      setLastFlippedIndices((prev) => {
-        const copy = [...prev];
-        copy[sectionIndex] = cardIndex;
-        return copy;
-      });
+
+      setActiveCard(globalIndex);
+
       setSelectedSection((prevSelectedSection) => {
         if (prevSelectedSection === sectionIndex) {
           return sectionIndex < 2 ? sectionIndex + 1 : 0;
         }
         return prevSelectedSection;
       });
+
       setGlowSection((prevGlowSection) => {
         if (prevGlowSection === sectionIndex) {
           return sectionIndex < 2 ? sectionIndex + 1 : 0;
         }
         return prevGlowSection;
       });
+
       if (sectionIndex === 2) {
         setCurrentWordIndex((prevIndex) => prevIndex + 1);
+        setTimeout(() => {
+          setRevealedCards(new Map());
+          setFlippedCards(new Set());
+          setActiveCard(null);
+        }, 1000);
       }
     };
 
@@ -240,9 +223,6 @@ export default function Home() {
               sectionIndex={sectionIndex}
               index={index}
               onFlip={handleCardFlip}
-              isFlipped={flippedCards.has(
-                index + sectionIndex * cardsPerRow * 2
-              )}
             />
           ))}
         </main>
