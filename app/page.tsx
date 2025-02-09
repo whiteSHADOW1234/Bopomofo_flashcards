@@ -27,6 +27,7 @@ export default function Home() {
   const [revealedCards, setRevealedCards] = useState<Map<number, string>>(new Map());
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [wordCompleted, setWordCompleted] = useState<boolean>(false); // Track if word is completed
 
   useEffect(() => {
     const calculateCardsPerRow = () => {
@@ -90,6 +91,7 @@ export default function Home() {
       setSelectedSection(0);
       setGlowSection(0);
       setActiveCard(null);
+      setWordCompleted(false); // Reset wordCompleted on new game
     }
   }, [phonetics]);
 
@@ -168,42 +170,58 @@ export default function Home() {
     const handleCardFlip = (sectionIndex: number, cardIndex: number) => {
       const globalIndex = cardIndex + sectionIndex * cardsPerRow * 2;
 
-      // Add to flipped cards set
-      setFlippedCards(prev => {
-        const newFlipped = new Set(prev);
-        newFlipped.add(globalIndex);
-        return newFlipped;
-      });
+      // Reset game logic (triggered when tapping section 1 after completing a word)
+      if (sectionIndex === 0 && wordCompleted) {
+        setCurrentWordIndex((prevIndex) => prevIndex + 1);
+        setRevealedCards(new Map());
+        setFlippedCards(new Set());
+        setActiveCard(null);
+        setSelectedSection(0); // Reset to section 1
+        setGlowSection(0); // Reset glow to section 1
+        setWordCompleted(false); // Reset word completed state
+        return; // Exit handler to prevent further actions for this card click
+      }
 
+
+      // Update revealed cards
       setRevealedCards((prev) => {
         const newRevealedCards = new Map(prev);
         newRevealedCards.set(globalIndex, letters ? letters[cardIndex] : "");
         return newRevealedCards;
       });
 
+      // Update flipped cards state with animation
+      setFlippedCards((prev) => {
+        const newFlippedCards = new Set(prev);
+        newFlippedCards.add(globalIndex);
+        return newFlippedCards;
+      });
+
+      // Set active card for glow effect
       setActiveCard(globalIndex);
 
+      // Update section selection
       setSelectedSection((prevSelectedSection) => {
         if (prevSelectedSection === sectionIndex) {
           return sectionIndex < 2 ? sectionIndex + 1 : 0;
         }
-        return prevSelectedSection;
+        return sectionIndex; // Remain in current section if not moving to next
       });
 
+      // Update glow section
       setGlowSection((prevGlowSection) => {
         if (prevGlowSection === sectionIndex) {
           return sectionIndex < 2 ? sectionIndex + 1 : 0;
         }
-        return prevGlowSection;
+        return sectionIndex; // Remain in current section glow if not moving to next
       });
 
+      // Handle completion of a word
       if (sectionIndex === 2) {
-        setCurrentWordIndex((prevIndex) => prevIndex + 1);
-        setTimeout(() => {
-          setRevealedCards(new Map());
-          setFlippedCards(new Set());
-          setActiveCard(null);
-        }, 1000);
+        setWordCompleted(true); // Mark word as completed
+        setSelectedSection(0); // Go back to section 1 for next word
+        setGlowSection(0); // Glow section 1 to indicate start of next word
+        setActiveCard(null); // Deactivate card glow after word complete
       }
     };
 
