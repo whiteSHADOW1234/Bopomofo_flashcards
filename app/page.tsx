@@ -27,7 +27,7 @@ export default function Home() {
   const [revealedCards, setRevealedCards] = useState<Map<number, string>>(new Map());
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [activeCard, setActiveCard] = useState<number | null>(null);
-  const [wordCompleted, setWordCompleted] = useState<boolean>(false); // Track if word is completed
+  const [isRoundComplete, setIsRoundComplete] = useState(false);
 
   useEffect(() => {
     const calculateCardsPerRow = () => {
@@ -85,15 +85,19 @@ export default function Home() {
       const selectedWords = shuffled
         .slice(0, numberOfWordsToSelect)
         .map((item) => item.text);
-      setAllWords(selectedWords);
-      setRevealedCards(new Map());
-      setFlippedCards(new Set());
-      setSelectedSection(0);
-      setGlowSection(0);
-      setActiveCard(null);
-      setWordCompleted(false); // Reset wordCompleted on new game
+      resetGame(selectedWords);
     }
   }, [phonetics]);
+
+  const resetGame = (words: string[]) => {
+    setAllWords(words);
+    setRevealedCards(new Map());
+    setFlippedCards(new Set());
+    setSelectedSection(0);
+    setGlowSection(0);
+    setActiveCard(null);
+    setIsRoundComplete(false);
+  };
 
   useEffect(() => {
     if (allWords.length > 0 && cardsPerRow > 0) {
@@ -136,7 +140,12 @@ export default function Home() {
     const isActive = activeCard === cardIndex;
 
     const handleFlip = () => {
-      if (selectedSection === sectionIndex && !isFlipped) {
+      if (sectionIndex === 0 && isRoundComplete) {
+        resetGame(allWords);
+        setTimeout(() => {
+          onFlip(sectionIndex, index);
+        }, 50);
+      } else if (selectedSection === sectionIndex && !isFlipped) {
         onFlip(sectionIndex, index);
       } else if (selectedSection !== sectionIndex) {
         alert("Please select a card from the correct section.");
@@ -170,19 +179,6 @@ export default function Home() {
     const handleCardFlip = (sectionIndex: number, cardIndex: number) => {
       const globalIndex = cardIndex + sectionIndex * cardsPerRow * 2;
 
-      // Reset game logic (triggered when tapping section 1 after completing a word)
-      if (sectionIndex === 0 && wordCompleted) {
-        setCurrentWordIndex((prevIndex) => prevIndex + 1);
-        setRevealedCards(new Map());
-        setFlippedCards(new Set());
-        setActiveCard(null);
-        setSelectedSection(0); // Reset to section 1
-        setGlowSection(0); // Reset glow to section 1
-        setWordCompleted(false); // Reset word completed state
-        return; // Exit handler to prevent further actions for this card click
-      }
-
-
       // Update revealed cards
       setRevealedCards((prev) => {
         const newRevealedCards = new Map(prev);
@@ -205,7 +201,7 @@ export default function Home() {
         if (prevSelectedSection === sectionIndex) {
           return sectionIndex < 2 ? sectionIndex + 1 : 0;
         }
-        return sectionIndex; // Remain in current section if not moving to next
+        return prevSelectedSection;
       });
 
       // Update glow section
@@ -213,15 +209,13 @@ export default function Home() {
         if (prevGlowSection === sectionIndex) {
           return sectionIndex < 2 ? sectionIndex + 1 : 0;
         }
-        return sectionIndex; // Remain in current section glow if not moving to next
+        return prevGlowSection;
       });
 
       // Handle completion of a word
       if (sectionIndex === 2) {
-        setWordCompleted(true); // Mark word as completed
-        setSelectedSection(0); // Go back to section 1 for next word
-        setGlowSection(0); // Glow section 1 to indicate start of next word
-        setActiveCard(null); // Deactivate card glow after word complete
+        setIsRoundComplete(true);
+        setCurrentWordIndex((prevIndex) => prevIndex + 1);
       }
     };
 
