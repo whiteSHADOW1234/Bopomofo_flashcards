@@ -138,6 +138,26 @@ export default function Home() {
     const cardIndex = index + sectionIndex * cardsPerRow * 2;
     const isFlipped = flippedCards.has(cardIndex);
     const isActive = activeCard === cardIndex;
+    const [isFlippedInternal, setIsFlippedInternal] = useState(false);
+
+    useEffect(() => {
+
+      // wait 50ms before flipping the card
+      // setTimeout(() => {
+      //   if (flippedCards.has(cardIndex)) {
+      //     setIsFlippedInternal(true);
+      //   } else {
+      //     setIsFlippedInternal(false);
+      //   }
+      // }, 50);
+      
+      if (flippedCards.has(cardIndex)) {
+        setIsFlippedInternal(true);
+      } else {
+        setIsFlippedInternal(false);
+      }
+
+    }, [flippedCards, cardIndex])
 
     const handleFlip = () => {
       if (sectionIndex === 0 && isRoundComplete) {
@@ -154,7 +174,7 @@ export default function Home() {
 
     return (
       <div
-        className={`${styles.card} ${isFlipped ? styles.flipped : ""} ${
+        className={`${styles.card} ${isFlippedInternal ? styles.flipped : ""} ${
           isActive ? styles.glow : ""
         }`}
         onClick={handleFlip}
