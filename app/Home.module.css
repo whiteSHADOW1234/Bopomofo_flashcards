@@ -101,13 +101,13 @@ box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
   transform: rotateY(180deg);
 }
 
-.flipped .cardFront {
+/* .flipped .cardFront {
   transform: rotateY(180deg);
 }
 
 .flipped .cardBack {
   transform: rotateY(0deg);
-}
+} */
 
 .letter {
   font-size: 2.0rem;
@@ -172,4 +172,27 @@ box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
   to {
     box-shadow: 0 0 20px rgba(255, 0, 0, 1);
   }
+}
+
+
+/* For cards that should animate when flipping */
+.flipped .cardFront {
+  transform: rotateY(180deg);
+  transition: transform 0.6s;
+}
+
+.flipped .cardBack {
+  transform: rotateY(0deg);
+  transition: transform 0.6s;
+}
+
+/* For cards that should flip instantly without animation */
+.flippedNoAnimation .cardFront {
+  transform: rotateY(180deg);
+  transition: none;
+}
+
+.flippedNoAnimation .cardBack {
+  transform: rotateY(0deg);
+  transition: none;
 }

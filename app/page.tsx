@@ -28,6 +28,7 @@ export default function Home() {
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [isRoundComplete, setIsRoundComplete] = useState(false);
+  // const [lastFlippedCard, setLastFlippedCard] = useState<number | null>(null);
 
   useEffect(() => {
     const calculateCardsPerRow = () => {
@@ -143,13 +144,13 @@ export default function Home() {
     useEffect(() => {
 
       // wait 50ms before flipping the card
-      // setTimeout(() => {
-      //   if (flippedCards.has(cardIndex)) {
-      //     setIsFlippedInternal(true);
-      //   } else {
-      //     setIsFlippedInternal(false);
-      //   }
-      // }, 50);
+      setTimeout(() => {
+        if (flippedCards.has(cardIndex)) {
+          setIsFlippedInternal(true);
+        } else {
+          setIsFlippedInternal(false);
+        }
+      }, 50);
       
       if (flippedCards.has(cardIndex)) {
         setIsFlippedInternal(true);
@@ -174,7 +175,9 @@ export default function Home() {
 
     return (
       <div
-        className={`${styles.card} ${isFlippedInternal ? styles.flipped : ""} ${
+        className={`${styles.card} ${
+          isFlippedInternal ? (isActive ? styles.flipped : styles.flippedNoAnimation) : ""
+        } ${
           isActive ? styles.glow : ""
         }`}
         onClick={handleFlip}
