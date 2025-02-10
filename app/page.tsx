@@ -160,6 +160,13 @@ export default function Home() {
 
     }, [flippedCards, cardIndex])
 
+    const renderLetter = (char: string) => {
+      if (char === 'ㄧ') {
+        return <span className={styles.rotatedSymbol}>{char}</span>;
+      }
+      return char;
+    };
+
     const handleFlip = () => {
       if (sectionIndex === 0 && isRoundComplete) {
         resetGame(allWords);
@@ -186,7 +193,7 @@ export default function Home() {
           <span className={styles.letter}></span>
         </div>
         <div className={`${styles.cardBack}`}>
-          <span className={styles.letter}>{revealedCards.get(cardIndex) || letter}</span>
+          <span className={styles.letter}>{revealedCards.get(cardIndex) ? renderLetter(revealedCards.get(cardIndex)!) : renderLetter(letter)}</span>
         </div>
       </div>
     );
