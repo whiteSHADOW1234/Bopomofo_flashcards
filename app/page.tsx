@@ -121,7 +121,7 @@ export default function Home() {
     let section1 = ' ', section2 = ' ', section3 = ' ';
 
     parts.forEach(part => {
-      const { base, tone } = parsePhoneticPart(part);
+      const { base } = parsePhoneticPart(part);
       if (SECTION1_CHARS.has(base)) {
         section1 = part;
       } else if (SECTION2_CHARS.has(base)) {
@@ -187,9 +187,9 @@ export default function Home() {
 
     const renderLetter = (char: string) => {
       if (!char || char.trim() === '') return '';
-      const { base } = parsePhoneticPart(char);
+      const { base, tone } = parsePhoneticPart(char);
       if (base === 'ㄧ') {
-        return <span className={styles.rotatedSymbol}>{char}</span>;
+        return <div><span className={styles.rotatedSymbol}>{base}</span>{tone}</div>;
       }
       return char;
     };
