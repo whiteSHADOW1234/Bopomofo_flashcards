@@ -52,7 +52,7 @@ export default function Home() {
             containerMarginLeft +
             containerMarginRight;
           const availableWidth = screenWidth - totalHorizontalSpacing;
-          setCardsPerRow(Math.floor(availableWidth / (isLargeScreen ? 83 : 63)));
+          setCardsPerRow(Math.floor(availableWidth / (isLargeScreen ? 85 : 63)));
         }
       }
     };
@@ -203,7 +203,7 @@ export default function Home() {
       } else if (selectedSection === sectionIndex && !isFlipped) {
         onFlip(sectionIndex, index);
       } else if (selectedSection !== sectionIndex) {
-        alert("Please select a card from the correct section.");
+        alert("請選擇正確區域的卡片。");
       }
     };
 
