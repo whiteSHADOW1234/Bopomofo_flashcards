@@ -15,6 +15,10 @@ type SectionData = {
   section3: string[];
 };
 
+const SECTION1_CHARS = new Set(['ㄅ', 'ㄆ', 'ㄇ', 'ㄈ', 'ㄉ', 'ㄊ', 'ㄋ', 'ㄌ', 'ㄍ', 'ㄎ', 'ㄏ', 'ㄐ', 'ㄑ', 'ㄒ', 'ㄓ', 'ㄔ', 'ㄕ', 'ㄖ', 'ㄗ', 'ㄘ', 'ㄙ']);
+const SECTION2_CHARS = new Set(['ㄧ', 'ㄨ', 'ㄩ']);
+const SECTION3_CHARS = new Set(['ㄚ', 'ㄛ', 'ㄜ', 'ㄝ', 'ㄞ', 'ㄟ', 'ㄠ', 'ㄡ', 'ㄢ', 'ㄣ', 'ㄤ', 'ㄥ', 'ㄦ']);
+
 export default function Home() {
   const [phonetics, setPhonetics] = useState<PhoneticData[]>([]);
   const [currentSectionData, setCurrentSectionData] = useState<SectionData | null>(null);
@@ -28,7 +32,6 @@ export default function Home() {
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [isRoundComplete, setIsRoundComplete] = useState(false);
-  // const [lastFlippedCard, setLastFlippedCard] = useState<number | null>(null);
 
   useEffect(() => {
     const calculateCardsPerRow = () => {
@@ -100,26 +103,48 @@ export default function Home() {
     setIsRoundComplete(false);
   };
 
+  const parsePhoneticPart = (character: string): { base: string, tone: string } => {
+    const toneMatch = character.match(/([^ˇˋˊ˙])(ˇ|ˋ|ˊ|˙)?/);
+    if (toneMatch) {
+      return {
+        base: toneMatch[1] || '',
+        tone: toneMatch[2] || ''
+      };
+    }
+    return { base: character, tone: '' };
+  };
+
+
+  const validateAndAssignParts = (word: string): [string, string, string] => {
+    const regex = /([ㄭ|ㄅ|ㄆ|ㄇ|ㄈ|ㄉ|ㄊ|ㄋ|ㄌ|ㄍ|ㄎ|ㄏ|ㄐ|ㄑ|ㄒ|ㄓ|ㄔ|ㄕ|ㄖ|ㄗ|ㄘ|ㄙ|ㄧ|ㄨ|ㄩ|ㄚ|ㄛ|ㄜ|ㄝ|ㄞ|ㄟ|ㄠ|ㄡ|ㄢ|ㄣ|ㄤ|ㄥ|ㄦ])([ˇˋˊ˙]?)/g;
+    const parts = word.match(regex) || [];
+    let section1 = ' ', section2 = ' ', section3 = ' ';
+
+    parts.forEach(part => {
+      const { base, tone } = parsePhoneticPart(part);
+      if (SECTION1_CHARS.has(base)) {
+        section1 = part;
+      } else if (SECTION2_CHARS.has(base)) {
+        section2 = part;
+      } else if (SECTION3_CHARS.has(base)) {
+        section3 = part;
+      }
+    });
+
+    return [section1, section2, section3];
+  };
+
   useEffect(() => {
     if (allWords.length > 0 && cardsPerRow > 0) {
       const selectedWord = allWords[currentWordIndex % allWords.length];
-      const regex = /([ㄭ|ㄅ|ㄆ|ㄇ|ㄈ|ㄉ|ㄊ|ㄋ|ㄌ|ㄍ|ㄎ|ㄏ|ㄐ|ㄑ|ㄒ|ㄓ|ㄔ|ㄕ|ㄖ|ㄗ|ㄘ|ㄙ|ㄧ|ㄨ|ㄩ|ㄚ|ㄛ|ㄜ|ㄝ|ㄞ|ㄟ|ㄠ|ㄡ|ㄢ|ㄣ|ㄤ|ㄥ|ㄦ])([ˇˋˊ˙]?)/g;
-      const parts = [];
-      let match;
-
-      while ((match = regex.exec(selectedWord)) !== null) {
-        parts.push(match[1] + (match[2] || ""));
-      }
-      if (parts.length === 3) {
-        const numberOfCards = cardsPerRow * 2;
-        setCurrentSectionData({
-          section1: Array(numberOfCards).fill(parts[0]),
-          section2: Array(numberOfCards).fill(parts[1]),
-          section3: Array(numberOfCards).fill(parts[2]),
-        });
-      } else {
-        console.error(`Word "${selectedWord}" does not have three parts`);
-      }
+      const [part1, part2, part3] = validateAndAssignParts(selectedWord);
+      
+      const numberOfCards = cardsPerRow * 2;
+      setCurrentSectionData({
+        section1: Array(numberOfCards).fill(part1),
+        section2: Array(numberOfCards).fill(part2),
+        section3: Array(numberOfCards).fill(part3),
+      });
     }
   }, [allWords, cardsPerRow, currentWordIndex]);
 
@@ -161,7 +186,9 @@ export default function Home() {
     }, [flippedCards, cardIndex])
 
     const renderLetter = (char: string) => {
-      if (char === 'ㄧ') {
+      if (!char || char.trim() === '') return '';
+      const { base } = parsePhoneticPart(char);
+      if (base === 'ㄧ') {
         return <span className={styles.rotatedSymbol}>{char}</span>;
       }
       return char;
