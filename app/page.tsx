@@ -187,10 +187,6 @@ export default function Home() {
 
     const renderLetter = (char: string) => {
       if (!char || char.trim() === '') return '';
-      const { base, tone } = parsePhoneticPart(char);
-      if (base === 'ㄧ') {
-        return <div><span className={styles.rotatedSymbol}>{base}</span>{tone}</div>;
-      }
       return char;
     };
 
